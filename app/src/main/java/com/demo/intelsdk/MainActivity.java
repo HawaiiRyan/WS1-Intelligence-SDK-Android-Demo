@@ -18,8 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //Crittercism.initialize(getApplicationContext(), "6d8e6cdd4fa240db966dd7aec333ea8c00555300");  // CN135 - aronpso OG
+        
         Crittercism.initialize(getApplicationContext(), "3af5b80b383b48af914ab178cb3f244d00555300");  // CN420 - aron OG
         Crittercism.setLoggingLevel(Crittercism.LoggingLevel.Debug);
         Crittercism.setUsername("demo1");
