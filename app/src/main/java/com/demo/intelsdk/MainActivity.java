@@ -1,85 +1,66 @@
 package com.demo.intelsdk;
 
 import android.os.Bundle;
-
-import com.crittercism.app.Crittercism;
-import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.crittercism.app.Crittercism;
 
-import android.view.View;
+import java.util.logging.Logger;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.demo.intelsdk.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+    final String TAG = "IntelSDK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // WS1 Intelligence - CN135 - aronpso OG
+        //CrittercismConfig crittercismConfig = new CrittercismConfig();
+        //crittercismConfig.setServiceMonitoringEnabled(true);
+        //crittercismConfig.setVersionCodeToBeIncludedInVersionString(true);
+
         Crittercism.initialize(getApplicationContext(), "6d8e6cdd4fa240db966dd7aec333ea8c00555300");
+        Crittercism.setLoggingLevel(Crittercism.LoggingLevel.Debug);
         Crittercism.setUsername("demo1");
         Crittercism.leaveBreadcrumb("BreadcrumbSampleApplication");
         Crittercism.beginUserFlow("UserFlowSampleApplication");
-        Crittercism.endUserFlow("UserFlowSampleApplication");
+        Crittercism.setUserFlowValue("UserFlowSampleApplication", 12345);
+        Log.i(TAG, "App crashed on previous run:  " + Crittercism.didCrashOnLastLoad());
         Crittercism.sendAppLoadData();
 
         super.onCreate(savedInstanceState);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        setContentView(R.layout.activity_main);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void crashAppOnClick(View view) throws InterruptedException {
+        Toast.makeText(this, "Crashing app now!", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "Crash button clicked");
+        Thread.sleep(2000);
+        boolean[] array = {false, true};
+        if (array[10]) {
+            Log.e(TAG, "Array index out of bounds exception did not occur");
+            Crittercism.leaveBreadcrumb("CrashBreadcrumb");
+            Crittercism.endUserFlow("UserFlowSampleApplication");
+            Crittercism.sendAppLoadData();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+    public void handleExceptionOnClick(View view) {
+        Toast.makeText(this, "Handling NullPointerException now!", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "Handle exception button clicked");
+        try {
+            throw new NullPointerException();
+        }
+        catch (NullPointerException npe) {
+            Log.i(TAG, "Caught NullPointerException");
+            Crittercism.leaveBreadcrumb("HandleExceptionBreadcrumb");
+            Crittercism.endUserFlow("UserFlowSampleApplication");
+            Crittercism.logHandledException(npe);
+            Crittercism.sendAppLoadData();
+        }
     }
 }
