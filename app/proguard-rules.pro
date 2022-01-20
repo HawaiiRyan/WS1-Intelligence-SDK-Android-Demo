@@ -12,6 +12,14 @@
 #   public *;
 #}
 
+# WS1 Intelligence
+-dontwarn com.crittercism.**
+-keep public class com.crittercism.**
+-keepclassmembers public class com.crittercism.**
+{
+    *;
+}
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
