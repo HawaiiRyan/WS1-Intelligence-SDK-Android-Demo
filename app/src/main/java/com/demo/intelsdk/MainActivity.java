@@ -18,15 +18,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         Crittercism.initialize(getApplicationContext(), "3af5b80b383b48af914ab178cb3f244d00555300");  // CN420 - aron OG
         Crittercism.setLoggingLevel(Crittercism.LoggingLevel.Debug);
         Crittercism.setUsername("demo1");
         Crittercism.leaveBreadcrumb("BreadcrumbSampleApplication");
         Crittercism.beginUserFlow("UserFlowSampleApplication");
         Crittercism.setUserFlowValue("UserFlowSampleApplication", 12345);
-        Log.i(TAG, "App crashed on previous run:  " + Crittercism.didCrashOnLastLoad());
         Crittercism.sendAppLoadData();
+
+        Log.i(TAG, "App crashed on previous run:  " + Crittercism.didCrashOnLastLoad());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
