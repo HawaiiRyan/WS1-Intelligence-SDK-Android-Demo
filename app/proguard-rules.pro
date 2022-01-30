@@ -27,3 +27,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+# WS1 SDK
+-dontwarn com.airwatch.**
+-keep class com.airwatch.** { *; }
